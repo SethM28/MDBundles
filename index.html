@@ -16,9 +16,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100%;
+      width:  100%;
       height: 100vh;
       background: white;
+      position: relative;
     }
     #main-screen {
       display: none;
@@ -84,6 +85,17 @@
       margin-top: 10px;
       width: 100%;
     }
+    .back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #ccc;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -92,6 +104,7 @@
     <h2>always the best deals</h2>
     <div class="tap-text">tap to continue</div>
   </div>  <div id="main-screen">
+    <button class="back-button" onclick="goBack()">Back</button>
     <button class="button mtn-btn" onclick="showOptions('MTN')">
       MTN
       <small>everywhere you go....</small>
@@ -122,6 +135,11 @@
       document.getElementById('main-screen').style.display = 'flex';
     }
 
+    function goBack() {
+      document.getElementById('main-screen').style.display = 'none';
+      document.getElementById('welcome-screen').style.display = 'flex';
+    }
+
     let selectedNetwork = "";
 
     function showOptions(network) {
@@ -150,7 +168,7 @@
       const handler = PaystackPop.setup({
         key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880',
         email: email,
-        amount: amount, // already in pesewas, no need to multiply
+        amount: amount,
         currency: 'GHS',
         callback: function(response) {
           fetch('https://mdbundles-sms.onrender.com/verify-payment', {
