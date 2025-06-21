@@ -150,7 +150,7 @@
       const handler = PaystackPop.setup({
         key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880',
         email: email,
-        amount: amount * 100, // in pesewas
+        amount: amount, // already in pesewas, no need to multiply
         currency: 'GHS',
         callback: function(response) {
           fetch('https://mdbundles-sms.onrender.com/verify-payment', {
