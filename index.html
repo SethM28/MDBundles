@@ -3,6 +3,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MDBundles</title>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
   <style>
     body, html {
       margin: 0;
@@ -18,7 +19,7 @@
       justify-content: center;
       width: 100%;
       height: 100vh;
-      backgroundhite;
+      background: white;
     }
     #main-screen {
       display: none;
@@ -112,35 +113,76 @@
     <input type="text" id="recipient-number" placeholder="Enter recipient number">
     <input type="text" id="payer-number" placeholder="Enter your number to pay">
     <input type="text" id="payer-name" placeholder="Enter your name">
-    <button onclick="confirmRequest()">Confirm</button>
+    <input type="email" id="payer-email" placeholder="Enter your email">
+    <button onclick="payWithPaystack()">Pay & Confirm</button>
   </div>  <div class="popup" id="final-msg">
     <p>Call or SMS <a href="tel:0597450073">0597450073</a> to make sure your request is being processed.</p>
   </div>  <script>
+    let selectedNetwork = "";
+
     function enterSite() {
       document.getElementById('welcome-screen').style.display = 'none';
       document.getElementById('main-screen').style.display = 'flex';
     }
-
-    let selectedNetwork = "";
 
     function showOptions(network) {
       selectedNetwork = network;
       document.getElementById('options-popup').style.display = 'block';
     }
 
-    function confirmRequest() {
-      const plan = document.getElementById('data-plan').value;
-      const number = document.getElementById('recipient-number').value;
-      const payer = document.getElementById('payer-number').value;
+    function payWithPaystack() {
+      const email = document.getElementById('payer-email').value;
       const name = document.getElementById('payer-name').value;
+      const phone = document.getElementById('payer-number').value;
+      const recipient = document.getElementById('recipient-number').value;
+      const bundle = document.getElementById('data-plan').value;
+      const amountMap = {
+        "1GB for GHc6.5": 650,
+        "2GB for GHc12.3": 1230,
+        "3GB for GHC17.5": 1750,
+        "5GB for GHc30.2": 3020,
+        "8GB for GHc45": 4500,
+        "10GB for GHc62": 6200
+      };
+      let amount = amountMap[bundle] * 100;
 
-      const message = `${selectedNetwork} Request:\nPlan: ${plan}\nRecipient: ${number}\nPayer: ${payer}\nName: ${name}`;
+      let handler = PaystackPop.setup({
+        key: 'pk_test_ebef27ff734f3a54f66e8e211144942c875b4a2a',
+        email: email,
+        amount: amount,
+        currency: 'GHS',
+        metadata: {
+          custom_fields: [
+            { display_name: "Phone", variable_name: "phone", value: phone },
+            { display_name: "Recipient", variable_name: "recipient", value: recipient },
+            { display_name: "Network", variable_name: "network", value: selectedNetwork },
+            { display_name: "Bundle", variable_name: "bundle", value: bundle }
+          ]
+        },
+        callback: function(response) {
+          fetch('https://mdbundles-sms.onrender.com/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reference: response.reference,
+              bundle,
+              name,
+              phone,
+              email
+            })
+          })
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('options-popup').style.display = 'none';
+            document.getElementById('final-msg').style.display = 'block';
+          });
+        },
+        onClose: function() {
+          alert('Transaction was cancelled.');
+        }
+      });
 
-      // Attempt to send SMS (Note: only works if integrated with backend/SMS API, not browser)
-      console.log("Sending SMS to 0597450063: ", message);
-
-      document.getElementById('options-popup').style.display = 'none';
-      document.getElementById('final-msg').style.display = 'block';
+      handler.openIframe();
     }
   </script></body>
 </html>
