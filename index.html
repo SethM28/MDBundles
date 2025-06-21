@@ -1,11 +1,146 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>MDBundles</title>
-  </head>
-  <body style="background: white; text-align: center; padding-top: 100px;">
-    <h1 style="font-size: 40px; font-style: italic; font-weight: bold;">WELCOME TO MDBundles</h1>
-    <h2 style="font-size: 30px; font-weight: bold;">always the best deals</h2>
-    <p style="position: absolute; bottom: 30px; width: 100%;">tap to continue</p>
-  </body>
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDBundles</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #welcome-screen, #main-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100vh;
+      backgroundhite;
+    }
+    #main-screen {
+      display: none;
+    }
+    h1 {
+      font-style: italic;
+      font-weight: bold;
+      font-size: 40px;
+      margin: 0;
+    }
+    h2 {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .tap-text {
+      position: absolute;
+      bottom: 20px;
+      font-size: 16px;
+    }
+    .button {
+      width: 5cm;
+      height: 2cm;
+      margin: 10px 0;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .mtn-btn {
+      background-color: yellow;
+      color: black;
+    }
+    .at-btn {
+      background: linear-gradient(to right, blue, red);
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 999;
+    }
+    .popup input {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+    }
+    .popup button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="welcome-screen" onclick="enterSite()">
+    <h1>WELCOME TO MDBundles</h1>
+    <h2>always the best deals</h2>
+    <div class="tap-text">tap to continue</div>
+  </div>  <div id="main-screen">
+    <button class="button mtn-btn" onclick="showOptions('MTN')">
+      MTN
+      <small>everywhere you go....</small>
+    </button>
+    <button class="button at-btn" onclick="showOptions('AT')">
+      AT (Airtel/Tigo)
+      <small>everywhere you go....</small>
+    </button>
+  </div>  <div class="popup" id="options-popup">
+    <select id="data-plan">
+      <option value="1GB for GHc6.5">1GB for GHc6.5</option>
+      <option value="2GB for GHc12.3">2GB for GHc12.3</option>
+      <option value="3GB for GHC17.5">3GB for GHC17.5</option>
+      <option value="5GB for GHc30.2">5GB for GHc30.2</option>
+      <option value="8GB for GHc45">8GB for GHc45</option>
+      <option value="10GB for GHc62">10GB for GHc62</option>
+    </select>
+    <input type="text" id="recipient-number" placeholder="Enter recipient number">
+    <input type="text" id="payer-number" placeholder="Enter your number to pay">
+    <input type="text" id="payer-name" placeholder="Enter your name">
+    <button onclick="confirmRequest()">Confirm</button>
+  </div>  <div class="popup" id="final-msg">
+    <p>Call or SMS <a href="tel:0597450073">0597450073</a> to make sure your request is being processed.</p>
+  </div>  <script>
+    function enterSite() {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('main-screen').style.display = 'flex';
+    }
+
+    let selectedNetwork = "";
+
+    function showOptions(network) {
+      selectedNetwork = network;
+      document.getElementById('options-popup').style.display = 'block';
+    }
+
+    function confirmRequest() {
+      const plan = document.getElementById('data-plan').value;
+      const number = document.getElementById('recipient-number').value;
+      const payer = document.getElementById('payer-number').value;
+      const name = document.getElementById('payer-name').value;
+
+      const message = `${selectedNetwork} Request:\nPlan: ${plan}\nRecipient: ${number}\nPayer: ${payer}\nName: ${name}`;
+
+      // Attempt to send SMS (Note: only works if integrated with backend/SMS API, not browser)
+      console.log("Sending SMS to 0597450063: ", message);
+
+      document.getElementById('options-popup').style.display = 'none';
+      document.getElementById('final-msg').style.display = 'block';
+    }
+  </script></body>
 </html>
