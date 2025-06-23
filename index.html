@@ -235,5 +235,16 @@ h2 {
       });
       handler.openIframe();
     }
-  </script></body>
+  </function showAccessPopup() {
+  document.getElementById('access-popup').style.display = 'block';
+}
+
+function confirmAccess() {
+  const pass = document.getElementById('access-password').value;
+  if (pass === 'Sethdora28.') {
+    window.location.href = '/orders.html'; // Go to orders page
+  } else {
+    alert('Incorrect password');
+  }
+}></body>
 </html>
