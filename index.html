@@ -122,6 +122,17 @@ h2 {
   cursor: pointer;
   font-weight: bold;
 }
+    <!-- Access Button -->
+<button onclick="showAccessPopup()" style="position: absolute; top: 20px; right: 20px; padding: 8px 16px; font-weight: bold; cursor: pointer;">
+  Access
+</button>
+
+<!-- Access Password Popup -->
+<div id="access-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid #ccc; padding: 20px; width: 300px; text-align: center; z-index: 1000; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+  <h3>Enter Access Password</h3>
+  <input type="password" id="access-password" placeholder="Password" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+  <button onclick="confirmAccess()" style="padding: 8px 16px; font-weight: bold;">Confirm</button>
+</div>
 
   </style>
 </head>
