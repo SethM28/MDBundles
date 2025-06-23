@@ -1,157 +1,120 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MDBundles</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       font-family: Arial, sans-serif;
       overflow: hidden;
-    }#welcome-screen, #main-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100vh;
-  background: white;
-  position: relative;
-}
-
-#main-screen {
-  display: none;
-}
-
-h1 {
-  font-style: italic;
-  font-weight: bold;
-  font-size: 40px;
-  margin: 0;
-}
-
-h2 {
-  font-size: 30px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-.tap-text {
-  position: absolute;
-  bottom: 20px;
-  font-size: 16px;
-  text-align: center;
-  width: 100%;
-  color: #333;
-}
-
-.button {
-  width: 5cm; /* Updated width */
-  height: 3cm; /* Updated height */
-  margin: 10px auto;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.mtn-btn {
-  background-color: yellow;
-  color: black;
-}
-
-.at-btn {
-  background: linear-gradient(to right, blue, red);
-}
-
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  border: 1px solid #ccc;
-  padding: 20px;
-  width: 90vw;
-  max-width: 400px;
-  font-size: 18px;
-  font-style: italic;
-  font-weight: bold;
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  display: none;
-  z-index: 999;
-}
-
-.popup input, .popup select {
-  display: block;
-  margin: 10px 0;
-  padding: 8px;
-  width: 100%;
-  font-size: 18px;
-  font-style: italic;
-  font-weight: bold;
-}
-
-.popup button {
-  padding: 10px;
-  margin-top: 10px;
-  width: 100%;
-  font-size: 18px;
-  font-style: italic;
-  font-weight: bold;
-}
-
-.back-button {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: #ccc;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-    <!-- Access Button -->
-<button onclick="showAccessPopup()" style="position: absolute; top: 20px; right: 20px; padding: 8px 16px; font-weight: bold; cursor: pointer;">
-  Access
-</button>
-
-<!-- Access Password Popup -->
-<div id="access-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid #ccc; padding: 20px; width: 300px; text-align: center; z-index: 1000; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
-  <h3>Enter Access Password</h3>
-  <input type="password" id="access-password" placeholder="Password" style="width: 100%; padding: 8px; margin-bottom: 10px;">
-  <button onclick="confirmAccess()" style="padding: 8px 16px; font-weight: bold;">Confirm</button>
-</div>
-
+    }
+    #welcome-screen, #main-screen {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      width: 100%; height: 100vh;
+      background: white; position: relative;
+    }
+    #main-screen { display: none; }
+    h1 {
+      font-style: italic; font-weight: bold;
+      font-size: 40px; margin: 0;
+    }
+    h2 {
+      font-size: 30px; font-weight: bold;
+      margin: 10px 0;
+    }
+    .tap-text {
+      position: absolute;
+      bottom: 20px; font-size: 16px;
+      text-align: center; width: 100%; color: #333;
+    }
+    .button {
+      width: 5cm; height: 3cm;
+      margin: 10px auto;
+      font-size: 18px; font-weight: bold;
+      color: white; border: none;
+      border-radius: 5px; cursor: pointer;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+    }
+    .mtn-btn {
+      background-color: yellow;
+      color: black;
+    }
+    .at-btn {
+      background: linear-gradient(to right, blue, red);
+    }
+    .popup, #access-popup {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white; border: 1px solid #ccc;
+      padding: 20px; width: 90vw;
+      max-width: 400px; font-size: 18px;
+      font-style: italic; font-weight: bold;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: none; z-index: 999;
+    }
+    .popup input, .popup select, #access-popup input {
+      display: block; margin: 10px 0;
+      padding: 8px; width: 100%;
+      font-size: 18px; font-style: italic;
+      font-weight: bold;
+    }
+    .popup button, #access-popup button {
+      padding: 10px; margin-top: 10px;
+      width: 100%; font-size: 18px;
+      font-style: italic; font-weight: bold;
+    }
+    .back-button {
+      position: absolute; top: 10px; left: 10px;
+      background-color: #ccc;
+      border: none; padding: 8px 12px;
+      border-radius: 4px; cursor: pointer;
+      font-weight: bold;
+    }
+    .access-btn {
+      position: absolute;
+      top: 20px; right: 20px;
+      padding: 8px 16px;
+      font-weight: bold;
+      background: #222; color: white;
+      border: none; border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+  <!-- Access Button -->
+  <button class="access-btn" onclick="showAccessPopup()">Access</button>
+
+  <!-- Access Popup -->
+  <div id="access-popup">
+    <h3>Enter Access Password</h3>
+    <input type="password" id="access-password" placeholder="Password">
+    <button onclick="confirmAccess()">Confirm</button>
+  </div>
+
   <div id="welcome-screen" onclick="enterSite()">
     <h1>WELCOME TO MDBundles</h1>
     <h2>always the best deals</h2>
     <div class="tap-text">tap to continue</div>
-  </div>  <div id="main-screen">
+  </div>
+
+  <div id="main-screen">
     <button class="back-button" onclick="goBack()">Back</button>
     <button class="button mtn-btn" onclick="showOptions('MTN')">
-      MTN
-      <small>everywhere you go....</small>
+      MTN<br><small>everywhere you go....</small>
     </button>
     <button class="button at-btn" onclick="showOptions('AT')">
-      AT (Airtel/Tigo)
-      <small>life is simple....</small>
+      AT (Airtel/Tigo)<br><small>life is simple....</small>
     </button>
-  </div>  <div class="popup" id="options-popup">
+  </div>
+
+  <div class="popup" id="options-popup">
     <select id="data-plan">
       <option value="1GB for GHc6.5">1GB for GHc6.5</option>
       <option value="2GB for GHc12.3">2GB for GHc12.3</option>
@@ -165,24 +128,40 @@ h2 {
     <input type="text" id="payer-name" placeholder="Enter your name">
     <input type="email" id="payer-email" placeholder="Enter your email">
     <button onclick="payWithPaystack()">Pay & Confirm</button>
-  </div>  <div class="popup" id="final-msg">
+  </div>
+
+  <div class="popup" id="final-msg">
     <p>Call or SMS <a href="tel:0597450073">0597450073</a> to make sure your request is being processed.</p>
-  </div>  <script src="https://js.paystack.co/v1/inline.js"></script>  <script>
+  </div>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
     function enterSite() {
       document.getElementById('welcome-screen').style.display = 'none';
       document.getElementById('main-screen').style.display = 'flex';
     }
-
     function goBack() {
       document.getElementById('main-screen').style.display = 'none';
       document.getElementById('welcome-screen').style.display = 'flex';
     }
-
     let selectedNetwork = "";
 
     function showOptions(network) {
       selectedNetwork = network;
       document.getElementById('options-popup').style.display = 'block';
+    }
+
+    function showAccessPopup() {
+      document.getElementById('access-popup').style.display = 'block';
+    }
+
+    function confirmAccess() {
+      const pass = document.getElementById('access-password').value;
+      if (pass === 'Sethdora28.') {
+        window.location.href = '/orders.html';
+      } else {
+        alert('Incorrect password');
+      }
     }
 
     function payWithPaystack() {
@@ -192,7 +171,6 @@ h2 {
       const name = document.getElementById('payer-name').value;
       const email = document.getElementById('payer-email').value;
 
-      let amount = 0;
       const priceMap = {
         "1GB for GHc6.5": 650,
         "2GB for GHc12.3": 1230,
@@ -201,7 +179,7 @@ h2 {
         "8GB for GHc45": 4500,
         "10GB for GHc62": 6200
       };
-      amount = priceMap[plan] || 0;
+      const amount = priceMap[plan] || 0;
 
       const handler = PaystackPop.setup({
         key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880',
@@ -209,7 +187,7 @@ h2 {
         amount: amount,
         currency: 'GHS',
         callback: function(response) {
-          fetch('https://mdbundles-sms.onrender.com/verify-payment', {
+          fetch('/verify-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -222,12 +200,21 @@ h2 {
               email: email
             })
           })
-          .then(res => res.json())
-          .then(data => {
+          .then(() => {
+            // Save the order to server
+            return fetch('/save-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name, email, recipient: number, bundle: plan, payer
+              })
+            });
+          })
+          .then(() => {
             document.getElementById('options-popup').style.display = 'none';
             document.getElementById('final-msg').style.display = 'block';
           })
-          .catch(err => alert('Error verifying payment'));
+          .catch(() => alert('Error verifying or saving payment'));
         },
         onClose: function() {
           alert('Payment window closed');
@@ -235,16 +222,6 @@ h2 {
       });
       handler.openIframe();
     }
-  </function showAccessPopup() {
-  document.getElementById('access-popup').style.display = 'block';
-}
-
-function confirmAccess() {
-  const pass = document.getElementById('access-password').value;
-  if (pass === 'Sethdora28.') {
-    window.location.href = '/orders.html'; // Go to orders page
-  } else {
-    alert('Incorrect password');
-  }
-}></body>
+  </script>
+</body>
 </html>
