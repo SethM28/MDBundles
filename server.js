@@ -1,12 +1,10 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(__dirname)); // Serve static files like HTML
-
+app.use(express.static(__dirname));
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -18,9 +16,12 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/orders', (req, res) => {
-  fs.readFile('orders.json', (err, data) => {
-    if (err) return res.status(500).send('Error reading orders file');
-    res.json(JSON.parse(data));
+  fs.readFile('orders.json', 'utf8', (err, data) => {
+    if (err) {
+      return res.status(500).send('Error reading orders');
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.send(data);
   });
 });
 
