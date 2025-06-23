@@ -31,3 +31,6 @@ app.listen(PORT, () => {
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
+app.get('/orders.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'orders.html'));
+});
