@@ -5,251 +5,121 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MDBundles</title>
   <style>
-    html, body {
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
     }
-    #welcome-screen, #main-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100vh;
-      background: white;
-      position: relative;
-    }
-    #main-screen {
-      display: none;
-    }
-    h1 {
-      font-style: italic;
-      font-weight: bold;
-      font-size: 40px;
-      margin: 0;
-    }
-    h2 {
-      font-size: 30px;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    .tap-text {
-      position: absolute;
-      bottom: 20px;
-      font-size: 16px;
-      text-align: center;
-      width: 100%;
-      color: #333;
-    }
-    .button {
-      width: 5cm;
-      height: 3cm;
-      margin: 10px auto;
-      font-size: 18px;
-      font-weight: bold;
+
+    header {
+      background-color: #4b0082;
       color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      padding: 15px 20px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
     }
-    .mtn-btn {
-      background-color: yellow;
-      color: black;
+
+    .access-btn {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
     }
-    .at-btn {
-      background: linear-gradient(to right, blue, red);
-    }
+
+    /* POPUP STYLES */
     .popup {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 1px solid #ccc;
-      padding: 20px;
-      width: 90vw;
-      max-width: 400px;
-      font-size: 18px;
-      font-style: italic;
-      font-weight: bold;
-      border-radius: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
       display: none;
+      align-items: center;
+      justify-content: center;
       z-index: 999;
     }
-    .popup input, .popup select {
-      display: block;
-      margin: 10px 0;
-      padding: 8px;
-      width: 100%;
-      font-size: 18px;
-      font-style: italic;
-      font-weight: bold;
+
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 300px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
-    .popup button {
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .login-box input {
+      width: 100%;
       padding: 10px;
-      margin-top: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .login-box button {
       width: 100%;
-      font-size: 18px;
-      font-style: italic;
+      padding: 10px;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      border: none;
+      border-radius: 8px;
       font-weight: bold;
     }
-    .back-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: #ccc;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
+
+    .login-box .error {
+      color: red;
+      text-align: center;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Access Button -->
-  <button 
-    id="access-btn" 
-    style="position: fixed; top: 20px; right: 20px; padding: 10px 20px; font-weight: bold;"
-    onclick="showAccessPopup()">
-    Access
-  </button>
+<header>
+  <h1>MDBundles</h1>
+  <button class="access-btn" onclick="showPopup()">Access</button>
+</header>
 
-  <div id="welcome-screen" onclick="enterSite()">
-    <h1>WELCOME TO MDBundles</h1>
-    <h2>always the best deals</h2>
-    <div class="tap-text">tap to continue</div>
+<main style="padding: 20px;">
+  <p>Welcome to MDBundles. Get the best MTN and AT data bundle deals here!</p>
+</main>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="login-box">
+    <h2>Admin Access</h2>
+    <input type="password" id="adminPass" placeholder="Enter access code" />
+    <div class="error" id="error"></div>
+    <button onclick="checkAccess()">Confirm</button>
   </div>
+</div>
 
-  <div id="main-screen">
-    <button class="back-button" onclick="goBack()">Back</button>
-    <button class="button mtn-btn" onclick="showOptions('MTN')">
-      MTN
-      <small>everywhere you go....</small>
-    </button>
-    <button class="button at-btn" onclick="showOptions('AT')">
-      AT (Airtel/Tigo)
-      <small>life is simple....</small>
-    </button>
-  </div>
+<script>
+  function showPopup() {
+    document.getElementById('popup').style.display = 'flex';
+  }
 
-  <div class="popup" id="options-popup">
-    <select id="data-plan">
-      <option value="1GB for GHc2">1GB for GHc2</option>
-      <option value="2GB for GHc12.3">2GB for GHc12.3</option>
-      <option value="3GB for GHC17.5">3GB for GHC17.5</option>
-      <option value="5GB for GHc30.2">5GB for GHc30.2</option>
-      <option value="8GB for GHc45">8GB for GHc45</option>
-      <option value="10GB for GHc62">10GB for GHc62</option>
-    </select>
-    <input type="text" id="recipient-number" placeholder="Enter recipient number">
-    <input type="text" id="payer-number" placeholder="Enter your number to pay">
-    <input type="text" id="payer-name" placeholder="Enter your name">
-    <input type="email" id="payer-email" placeholder="Enter your email">
-    <button onclick="payWithPaystack()">Pay & Confirm</button>
-  </div>
-
-  <div class="popup" id="final-msg">
-    <p>Call or SMS <a href="tel:0597450073">0597450073</a> to make sure your request is being processed.</p>
-  </div>
-
-  <!-- Access Password Popup -->
-  <div id="access-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
-    background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.2); z-index:999;">
-    <input type="password" id="access-pass" placeholder="Enter access code" style="width:100%; padding:10px; margin-bottom:10px;">
-    <button onclick="checkAccess()" style="width:100%; padding:10px;">Confirm</button>
-  </div>
-
-  <script src="https://js.paystack.co/v1/inline.js"></script>
-  <script>
-    function enterSite() {
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('main-screen').style.display = 'flex';
+  function checkAccess() {
+    const input = document.getElementById('adminPass').value;
+    const error = document.getElementById('error');
+    if (input === "Sethdora28.") {
+      window.location.href = "orders.html";
+    } else {
+      error.textContent = "Incorrect access code.";
     }
+  }
+</script>
 
-    function goBack() {
-      document.getElementById('main-screen').style.display = 'none';
-      document.getElementById('welcome-screen').style.display = 'flex';
-    }
-
-    let selectedNetwork = "";
-
-    function showOptions(network) {
-      selectedNetwork = network;
-      document.getElementById('options-popup').style.display = 'block';
-    }
-
-    function payWithPaystack() {
-      const plan = document.getElementById('data-plan').value;
-      const number = document.getElementById('recipient-number').value;
-      const payer = document.getElementById('payer-number').value;
-      const name = document.getElementById('payer-name').value;
-      const email = document.getElementById('payer-email').value;
-
-      const priceMap = {
-        "1GB for GHc2": 200,
-        "2GB for GHc12.3": 1230,
-        "3GB for GHC17.5": 1750,
-        "5GB for GHc30.2": 3020,
-        "8GB for GHc45": 4500,
-        "10GB for GHc62": 6200
-      };
-      const amount = priceMap[plan] || 0;
-
-      const handler = PaystackPop.setup({
-        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880', // replace with your actual live key
-        email: email,
-        amount: amount,
-        currency: 'GHS',
-        callback: function(response) {
-          fetch('/verify-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              reference: response.reference,
-              network: selectedNetwork,
-              bundle: plan,
-              recipient: number,
-              payer: payer,
-              name: name,
-              email: email
-            })
-          })
-          .then(() => {
-            document.getElementById('options-popup').style.display = 'none';
-            document.getElementById('final-msg').style.display = 'block';
-          })
-          .catch(() => alert('Error verifying payment'));
-        },
-        onClose: function() {
-          alert('Payment window closed');
-        }
-      });
-      handler.openIframe();
-    }
-
-    function showAccessPopup() {
-      document.getElementById('access-popup').style.display = 'block';
-    }
-
-    function checkAccess() {
-      const pass = document.getElementById('access-pass').value;
-      if (pass === "Sethdora28.") {
-        window.location.href = "/orders.html";
-      } else {
-        alert("Incorrect password!");
-      }
-    }
-  </script>
 </body>
 </html>
