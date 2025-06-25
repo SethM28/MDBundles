@@ -5,121 +5,255 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MDBundles</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
+    html, body {
       margin: 0;
       padding: 0;
-    }
-
-    header {
-      background-color: #4b0082;
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .access-btn {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      border: none;
-      color: white;
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    /* POPUP STYLES */
-    .popup {
-      position: fixed;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    #welcome-screen, #main-screen {
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 999;
-    }
-
-    .login-box {
+      width: 100%;
+      height: 100vh;
       background: white;
-      padding: 30px;
-      border-radius: 15px;
-      width: 300px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
     }
-
-    .login-box h2 {
+    #main-screen {
+      display: none;
+    }
+    h1 {
+      font-style: italic;
+      font-weight: bold;
+      font-size: 40px;
+      margin: 0;
+    }
+    h2 {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .tap-text {
+      position: absolute;
+      bottom: 20px;
+      font-size: 16px;
       text-align: center;
-      margin-bottom: 20px;
+      width: 100%;
       color: #333;
     }
-
-    .login-box input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    .login-box button {
-      width: 100%;
-      padding: 10px;
-      background: linear-gradient(to right, #6a11cb, #2575fc);
+    .button {
+      width: 5cm;
+      height: 3cm;
+      margin: 10px auto;
+      font-size: 18px;
+      font-weight: bold;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .mtn-btn {
+      background-color: yellow;
+      color: black;
+    }
+    .at-btn {
+      background: linear-gradient(to right, blue, red);
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+      width: 90vw;
+      max-width: 400px;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: bold;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 999;
+    }
+    .popup input, .popup select {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+      font-size: 18px;
+      font-style: italic;
       font-weight: bold;
     }
-
-    .login-box .error {
-      color: red;
-      text-align: center;
-      font-size: 12px;
+    .popup button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: bold;
+    }
+    .back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #ccc;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .access-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #4CAF50;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
     }
   </style>
 </head>
 <body>
-
-<header>
-  <h1>MDBundles</h1>
-  <button class="access-btn" onclick="showPopup()">Access</button>
-</header>
-
-<main style="padding: 20px;">
-  <p>Welcome to MDBundles. Get the best MTN and AT data bundle deals here!</p>
-</main>
-
-<!-- POPUP -->
-<div class="popup" id="popup">
-  <div class="login-box">
-    <h2>Admin Access</h2>
-    <input type="password" id="adminPass" placeholder="Enter access code" />
-    <div class="error" id="error"></div>
-    <button onclick="checkAccess()">Confirm</button>
+  <div id="welcome-screen" onclick="enterSite()">
+    <h1>WELCOME TO MDBundles</h1>
+    <h2>always the best deals</h2>
+    <div class="tap-text">tap to continue</div>
   </div>
-</div>
 
-<script>
-  function showPopup() {
-    document.getElementById('popup').style.display = 'flex';
-  }
+  <div id="main-screen">
+    <button class="back-button" onclick="goBack()">Back</button>
+    <button class="access-button" onclick="showAccessPopup()">Access</button>
 
-  function checkAccess() {
-    const input = document.getElementById('adminPass').value;
-    const error = document.getElementById('error');
-    if (input === "Sethdora28.") {
-      window.location.href = "orders.html";
-    } else {
-      error.textContent = "Incorrect access code.";
+    <button class="button mtn-btn" onclick="showOptions('MTN')">
+      MTN
+      <small>everywhere you go....</small>
+    </button>
+    <button class="button at-btn" onclick="showOptions('AT')">
+      AT (Airtel/Tigo)
+      <small>life is simple....</small>
+    </button>
+  </div>
+
+  <div class="popup" id="options-popup">
+    <select id="data-plan">
+      <option value="1GB for GHc2">1GB for GHc2</option>
+      <option value="2GB for GHc12.3">2GB for GHc12.3</option>
+      <option value="3GB for GHC17.5">3GB for GHC17.5</option>
+      <option value="5GB for GHc30.2">5GB for GHc30.2</option>
+      <option value="8GB for GHc45">8GB for GHc45</option>
+      <option value="10GB for GHc62">10GB for GHc62</option>
+    </select>
+    <input type="text" id="recipient-number" placeholder="Enter recipient number">
+    <input type="text" id="payer-number" placeholder="Enter your number to pay">
+    <input type="text" id="payer-name" placeholder="Enter your name">
+    <input type="email" id="payer-email" placeholder="Enter your email">
+    <button onclick="payWithPaystack()">Pay & Confirm</button>
+  </div>
+
+  <div class="popup" id="final-msg">
+    <p>Call or SMS <a href="tel:0597450073">0597450073</a> to make sure your request is being processed.</p>
+  </div>
+
+  <div class="popup" id="access-popup">
+    <input type="password" id="admin-pass" placeholder="Enter Access Password">
+    <button onclick="checkPassword()">Confirm</button>
+  </div>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    function enterSite() {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('main-screen').style.display = 'flex';
     }
-  }
-</script>
 
+    function goBack() {
+      document.getElementById('main-screen').style.display = 'none';
+      document.getElementById('welcome-screen').style.display = 'flex';
+    }
+
+    function showOptions(network) {
+      selectedNetwork = network;
+      document.getElementById('options-popup').style.display = 'block';
+    }
+
+    function showAccessPopup() {
+      document.getElementById('access-popup').style.display = 'block';
+    }
+
+    function checkPassword() {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass === 'Sethdora28') {
+        window.location.href = '/orders';
+      } else {
+        alert('Wrong password');
+      }
+    }
+
+    let selectedNetwork = "";
+
+    function payWithPaystack() {
+      const plan = document.getElementById('data-plan').value;
+      const number = document.getElementById('recipient-number').value;
+      const payer = document.getElementById('payer-number').value;
+      const name = document.getElementById('payer-name').value;
+      const email = document.getElementById('payer-email').value;
+
+      const priceMap = {
+        "1GB for GHc2": 200,
+        "2GB for GHc12.3": 1230,
+        "3GB for GHC17.5": 1750,
+        "5GB for GHc30.2": 3020,
+        "8GB for GHc45": 4500,
+        "10GB for GHc62": 6200
+      };
+      const amount = priceMap[plan] || 0;
+
+      const handler = PaystackPop.setup({
+        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880', // Replace if needed
+        email: email,
+        amount: amount,
+        currency: 'GHS',
+        callback: function(response) {
+          fetch('https://mdbundles-sms.onrender.com/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reference: response.reference,
+              network: selectedNetwork,
+              bundle: plan,
+              recipient: number,
+              payer: payer,
+              name: name,
+              email: email
+            })
+          })
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('options-popup').style.display = 'none';
+            document.getElementById('final-msg').style.display = 'block';
+          })
+          .catch(err => alert('Error verifying payment'));
+        },
+        onClose: function() {
+          alert('Payment window closed');
+        }
+      });
+      handler.openIframe();
+    }
+  </script>
 </body>
 </html>
