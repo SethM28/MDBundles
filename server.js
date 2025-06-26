@@ -7,23 +7,24 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(__dirname));
 app.use(express.json());
 
-// Serve homepage
+// Serve home
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Access portal
+// Serve access orders
 app.get('/orders', (req, res) => {
   fs.readFile('orders.json', 'utf8', (err, data) => {
-    if (err) return res.status(500).send('Error loading orders');
+    if (err) return res.status(500).send('Error reading orders');
     res.setHeader('Content-Type', 'application/json');
     res.send(data);
   });
 });
 
-// Handle Paystack order callback
+// ✅ This is the key part!
 app.post('/verify-payment', (req, res) => {
   const order = req.body;
+  console.log("Received order:", order);
 
   fs.readFile('orders.json', 'utf8', (err, data) => {
     const orders = err ? [] : JSON.parse(data || '[]');
