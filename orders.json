@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "network": "AT",
+    "bundle": "10GB for GHc62",
+    "recipient": "0558888888",
+    "payer": "0247777777",
+    "name": "Test User",
+    "email": "test@site.com"
+  }
+]
