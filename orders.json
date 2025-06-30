@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "reference": "ABC12345",
+    "network": "MTN",
+    "bundle": "1GB for GHc2",
+    "recipient": "0551234567",
+    "payer": "0249876543",
+    "name": "Kwame",
+    "email": "kwame@example.com"
+  }
+]
