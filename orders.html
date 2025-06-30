@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Orders</title>
+  <meta charset="UTF-8">
+  <title>Order Records</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       padding: 20px;
+      background: #f5f5f5;
     }
     h2 {
       text-align: center;
@@ -15,52 +16,64 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      background: white;
     }
     th, td {
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #ccc;
       text-align: left;
     }
     th {
-      background-color: #f2f2f2;
+      background: #333;
+      color: white;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
     }
   </style>
 </head>
 <body>
-  <h2>Customer Orders</h2>
-  <table id="orders-table">
-    <thead>
-      <tr>
-        <th>Network</th>
-        <th>Bundle</th>
-        <th>Recipient</th>
-        <th>Payer</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Reference</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="container">
+    <h2>Order Records</h2>
+    <table id="orders-table">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Network</th>
+          <th>Bundle</th>
+          <th>Recipient</th>
+          <th>Payer</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
-    fetch('/orders-json') // changed path to avoid conflict
+    fetch('/orders.json')
       .then(res => res.json())
       .then(data => {
-        const tbody = document.querySelector('#orders-table tbody');
+        const tableBody = document.querySelector('#orders-table tbody');
         data.forEach(order => {
           const row = document.createElement('tr');
           row.innerHTML = `
+            <td>${order.reference}</td>
             <td>${order.network}</td>
             <td>${order.bundle}</td>
             <td>${order.recipient}</td>
             <td>${order.payer}</td>
             <td>${order.name}</td>
             <td>${order.email}</td>
-            <td>${order.reference}</td>
           `;
-          tbody.appendChild(row);
+          tableBody.appendChild(row);
         });
+      })
+      .catch(err => {
+        alert('Failed to load orders');
+        console.error(err);
       });
   </script>
 </body>
