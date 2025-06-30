@@ -1,71 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Orders Table</title>
+  <title>All Orders</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
     }
+    h1 {
+      text-align: center;
+    }
     table {
-      border-collapse: collapse;
       width: 100%;
+      border-collapse: collapse;
       margin-top: 20px;
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 12px;
-      text-align: left;
+      padding: 8px;
+      text-align: center;
     }
     th {
-      background-color: #f4f4f4;
-    }
-    h1 {
-      text-align: center;
+      background-color: #f2f2f2;
     }
   </style>
 </head>
 <body>
-  <h1>Customer Orders</h1>
-  <table>
+  <h1>📋 MDBundles Orders</h1>
+  <table id="orders-table">
     <thead>
       <tr>
-        <th>Name</th>
+        <th>Time</th>
         <th>Network</th>
         <th>Bundle</th>
         <th>Recipient</th>
         <th>Payer</th>
+        <th>Name</th>
         <th>Email</th>
       </tr>
     </thead>
-    <tbody id="orders-table">
-      <!-- Orders will load here -->
+    <tbody>
+      <!-- Rows will be inserted here -->
     </tbody>
   </table>
 
   <script>
-    fetch('/orders.json')
-      .then(res => res.json())
-      .then(data => {
-        const table = document.getElementById('orders-table');
-        table.innerHTML = '';
-        data.forEach(order => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${order.name}</td>
-            <td>${order.network}</td>
-            <td>${order.bundle}</td>
-            <td>${order.recipient}</td>
-            <td>${order.payer}</td>
-            <td>${order.email}</td>
-          `;
-          table.appendChild(row);
+    function loadOrders() {
+      fetch('/orders.json')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector('#orders-table tbody');
+          tbody.innerHTML = ''; // clear old rows
+
+          data.slice().reverse().forEach(order => {
+            const row = document.createElement('tr');
+            const time = new Date().toLocaleString();
+            row.innerHTML = `
+              <td>${time}</td>
+              <td>${order.network}</td>
+              <td>${order.bundle}</td>
+              <td>${order.recipient}</td>
+              <td>${order.payer}</td>
+              <td>${order.name}</td>
+              <td>${order.email}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(err => {
+          console.error('Error loading orders:', err);
         });
-      })
-      .catch(err => {
-        alert('Failed to load orders');
-        console.error(err);
-      });
+    }
+
+    // Load on page load
+    loadOrders();
+
+    // Refresh every 10 seconds
+    setInterval(loadOrders, 10000);
   </script>
 </body>
 </html>
