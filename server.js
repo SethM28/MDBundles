@@ -7,17 +7,17 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(__dirname));
 app.use(express.json());
 
-// Serve homepage
+// Serve the homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Serve pretty orders table (admin view)
+// Show the orders table page
 app.get('/orders', (req, res) => {
   res.sendFile(path.join(__dirname, 'orders.html'));
 });
 
-// Serve order data as raw JSON
+// Serve the raw data as JSON
 app.get('/orders.json', (req, res) => {
   fs.readFile('orders.json', 'utf8', (err, data) => {
     if (err) return res.status(500).send('Error reading orders');
@@ -26,13 +26,20 @@ app.get('/orders.json', (req, res) => {
   });
 });
 
-// Handle Paystack payment verification and save order
+// Save order from Paystack
 app.post('/verify-payment', (req, res) => {
   const order = req.body;
   console.log("Received order:", order);
 
   fs.readFile('orders.json', 'utf8', (err, data) => {
-    const orders = err ? [] : JSON.parse(data || '[]');
+    let orders = [];
+    if (!err && data) {
+      try {
+        orders = JSON.parse(data);
+      } catch (e) {
+        console.error("Error parsing orders.json:", e);
+      }
+    }
     orders.push(order);
 
     fs.writeFile('orders.json', JSON.stringify(orders, null, 2), err => {
