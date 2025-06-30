@@ -150,7 +150,7 @@
 
   <div class="popup" id="options-popup">
     <select id="data-plan">
-      <option value="1GB for GHc0.3">1GB for GHc0.3</option>
+      <option value="1GB for GHc2">1GB for GHc2</option>
       <option value="2GB for GHc12.3">2GB for GHc12.3</option>
       <option value="3GB for GHC17.5">3GB for GHC17.5</option>
       <option value="5GB for GHc30.2">5GB for GHc30.2</option>
@@ -165,7 +165,10 @@
   </div>
 
   <div class="popup" id="final-msg">
-    <p>Call or SMS <a href="tel:0597450073">0597450073</a> to make sure your request is being processed.</p>
+    <p style="text-align: center; color: green; font-size: 18px;">
+      ✅ Payment successful!<br>
+      📞 Call or SMS <strong>0260879514</strong> to confirm that your request is being processed.
+    </p>
   </div>
 
   <div class="popup" id="access-popup">
@@ -175,6 +178,8 @@
 
   <script src="https://js.paystack.co/v1/inline.js"></script>
   <script>
+    let selectedNetwork = "";
+
     function enterSite() {
       document.getElementById('welcome-screen').style.display = 'none';
       document.getElementById('main-screen').style.display = 'flex';
@@ -203,8 +208,6 @@
       }
     }
 
-    let selectedNetwork = "";
-
     function payWithPaystack() {
       const plan = document.getElementById('data-plan').value;
       const number = document.getElementById('recipient-number').value;
@@ -213,7 +216,7 @@
       const email = document.getElementById('payer-email').value;
 
       const priceMap = {
-        "1GB for GHc0.3": 30,
+        "1GB for GHc2": 200,
         "2GB for GHc12.3": 1230,
         "3GB for GHC17.5": 1750,
         "5GB for GHc30.2": 3020,
@@ -223,7 +226,7 @@
       const amount = priceMap[plan] || 0;
 
       const handler = PaystackPop.setup({
-        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880',
+        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880', // Replace with your public key
         email: email,
         amount: amount,
         currency: 'GHS',
@@ -243,10 +246,17 @@
           })
           .then(res => res.json())
           .then(data => {
-            document.getElementById('options-popup').style.display = 'none';
-            document.getElementById('final-msg').style.display = 'block';
+            if (data.status === 'success') {
+              document.getElementById('options-popup').style.display = 'none';
+              document.getElementById('final-msg').style.display = 'block';
+            } else {
+              alert('Error saving your order');
+            }
           })
-          .catch(err => alert('Error verifying payment'));
+          .catch(err => {
+            console.error(err);
+            alert('Error verifying your payment');
+          });
         },
         onClose: function() {
           alert('Payment window closed');
