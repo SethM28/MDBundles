@@ -1,24 +1,33 @@
-// server.js const express = require('express'); const fs = require('fs'); const path = require('path'); const app = express(); const PORT = process.env.PORT || 3000;
+const express = require('express'); const fs = require('fs'); const path = require('path'); const app = express(); const PORT = process.env.PORT || 3000;
 
 app.use(express.static(__dirname)); app.use(express.json());
 
-// Serve homepage app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); });
+// Serve the homepage app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); });
 
-// --- USER AUTH --- const USERS_FILE = path.join(__dirname, 'users.json');
+// Serve the registration page app.get('/register', (req, res) => { res.sendFile(path.join(__dirname, 'register.html')); });
 
-app.post('/register', (req, res) => { const { username, password, email } = req.body; if (!username || !password || !email) return res.json({ success: false, message: 'All fields required' });
+// Handle registration data app.post('/register', (req, res) => { const newUser = req.body;
 
-const users = fs.existsSync(USERS_FILE) ? JSON.parse(fs.readFileSync(USERS_FILE)) : []; if (users.find(u => u.username === username)) { return res.json({ success: false, message: 'Username already exists' }); }
+fs.readFile('users.json', 'utf8', (err, data) => { const users = err ? [] : JSON.parse(data || '[]');
 
-users.push({ username, password, email }); fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); res.json({ success: true }); });
+const usernameExists = users.find(u => u.username === newUser.username);
+if (usernameExists) {
+  return res.status(400).json({ status: 'fail', message: 'Username already taken' });
+}
 
-app.post('/login', (req, res) => { const { username, password } = req.body; const users = fs.existsSync(USERS_FILE) ? JSON.parse(fs.readFileSync(USERS_FILE)) : []; const user = users.find(u => u.username === username && u.password === password); if (!user) return res.json({ success: false, message: 'Invalid credentials' }); res.json({ success: true }); });
+users.push(newUser);
+fs.writeFile('users.json', JSON.stringify(users, null, 2), err => {
+  if (err) return res.status(500).send('Error saving user');
+  res.json({ status: 'success' });
+});
 
-// --- ORDERS --- app.get('/orders', (req, res) => { res.sendFile(path.join(__dirname, 'orders.html')); });
+}); });
 
-app.get('/orders.json', (req, res) => { fs.readFile('orders.json', 'utf8', (err, data) => { if (err) return res.status(500).send('Error reading orders'); res.setHeader('Content-Type', 'application/json'); res.send(data); }); });
+// Serve the orders display page app.get('/orders', (req, res) => { res.sendFile(path.join(__dirname, 'orders.html')); });
 
-app.post('/verify-payment', (req, res) => { const order = req.body; order.time = new Date().toLocaleString(); console.log("Received order:", order);
+// Raw orders data app.get('/orders.json', (req, res) => { fs.readFile('orders.json', 'utf8', (err, data) => { if (err) return res.status(500).send('Error reading orders'); res.setHeader('Content-Type', 'application/json'); res.send(data); }); });
+
+// Save orders from Paystack callback app.post('/verify-payment', (req, res) => { const order = req.body; order.time = new Date().toLocaleString(); console.log("Received order:", order);
 
 fs.readFile('orders.json', 'utf8', (err, data) => { const orders = err ? [] : JSON.parse(data || '[]'); orders.push(order);
 
@@ -33,4 +42,5 @@ fs.writeFile('orders.json', JSON.stringify(orders, null, 2), err => {
 }); });
 
 app.listen(PORT, () => { console.log(Server is running on port ${PORT}); });
+
 
