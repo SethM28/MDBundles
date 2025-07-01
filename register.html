@@ -1,85 +1,21 @@
-<!DOCTYPE html><html lang="en">
+<!-- register.html -->
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register - MDBundles</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #4CAF50, #2196F3);
-    }
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      width: 90%;
-      max-width: 400px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .link {
-      text-align: center;
-      margin-top: 10px;
-    }
-  </style>
+  <title>MDBundles Registration</title>
 </head>
 <body>
-  <div class="container">
-    <h2>Create Account</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="register()">Register</button>
-    <div class="link">
-      <a href="index.html">Already have an account? Login</a>
-    </div>
-    <div id="message" style="color:red; text-align:center; margin-top:10px;"></div>
-  </div>  <script>
-    function register() {
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      fetch('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'success') {
-          window.location.href = 'index.html';
-        } else {
-          document.getElementById('message').textContent = data.message;
-        }
-      });
-    }
-  </script></body>
+  <h2>Register for MDBundles</h2>
+  <form action="/register" method="POST">
+    <input type="text" name="name" placeholder="Full Name" required /><br>
+    <input type="email" name="email" placeholder="Email" required /><br>
+    <input type="password" name="password" placeholder="Password" required /><br>
+    <select name="role">
+      <option value="customer">Customer</option>
+      <option value="dealer">Dealer</option>
+      <option value="agent">Agent</option>
+    </select><br>
+    <button type="submit">Register</button>
+  </form>
+</body>
 </html>
