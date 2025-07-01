@@ -6,403 +6,130 @@
   <title>MDBundles</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       font-family: Arial, sans-serif;
       overflow: hidden;
     }
-    #welcome-screen, #main-screen {
-      display: flex;
+    #welcome-screen, #main-screen, #login-screen, #register-screen {
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      height: 100vh;
+      width: 100%; height: 100vh;
       background: white;
       position: relative;
     }
-    #main-screen {
-      display: none;
+    #welcome-screen {
+      display: flex;
     }
     h1 {
-      font-style: italic;
-      font-weight: bold;
-      font-size: 40px;
-      margin: 0;
+      font-style: italic; font-weight: bold;
+      font-size: 40px; margin: 0;
     }
     h2 {
-      font-size: 30px;
-      font-weight: bold;
+      font-size: 30px; font-weight: bold;
       margin: 10px 0;
     }
     .tap-text {
-      position: absolute;
-      bottom: 20px;
-      font-size: 16px;
-      text-align: center;
-      width: 100%;
+      position: absolute; bottom: 20px;
+      font-size: 16px; width: 100%; text-align: center;
       color: #333;
     }
     .button {
-      width: 5cm;
-      height: 3cm;
-      margin: 10px auto;
-      font-size: 18px;
-      font-weight: bold;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      width: 5cm; height: 3cm;
+      margin: 10px auto; font-size: 18px;
+      font-weight: bold; color: white;
+      border: none; border-radius: 5px;
+      cursor: pointer; display: flex;
+      flex-direction: column; justify-content: center;
       align-items: center;
     }
-    .mtn-btn {
-      background-color: yellow;
-      color: black;
-    }
-    .at-btn {
-      background: linear-gradient(to right, blue, red);
-    }
+    .mtn-btn { background-color: yellow; color: black; }
+    .at-btn { background: linear-gradient(to right, blue, red); }
     .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
+      position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: white;
-      border: 1px solid #ccc;
-      padding: 20px;
-      width: 90vw;
-      max-width: 400px;
-      font-size: 18px;
-      font-style: italic;
-      font-weight: bold;
-      border-radius: 20px;
+      background: white; border: 1px solid #ccc;
+      padding: 20px; width: 90vw; max-width: 400px;
+      font-size: 18px; font-style: italic;
+      font-weight: bold; border-radius: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: none;
-      z-index: 999;
+      display: none; z-index: 999;
     }
     .popup input, .popup select {
-      display: block;
-      margin: 10px 0;
-      padding: 8px;
-      width: 100%;
-      font-size: 18px;
+      display: block; margin: 10px 0;
+      padding: 8px; width: 100%;
+      font-size: 18px; font-style: italic; font-weight: bold;
     }
     .popup button {
-      padding: 10px;
-      margin-top: 10px;
-      width: 100%;
-      font-size: 18px;
+      padding: 10px; margin-top: 10px;
+      width: 100%; font-size: 18px;
+      font-style: italic; font-weight: bold;
     }
     .back-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: #ccc;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
+      position: absolute; top: 10px; left: 10px;
+      background-color: #ccc; border: none;
+      padding: 8px 12px; border-radius: 4px;
+      cursor: pointer; font-weight: bold;
     }
     .access-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #4CAF50;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      color: white;
+      position: absolute; top: 10px; right: 10px;
+      background-color: #4CAF50; border: none;
+      padding: 8px 12px; border-radius: 4px;
+      cursor: pointer; font-weight: bold; color: white;
+    }
+    .auth-button {
+      background: #4CAF50;
+      padding: 10px 20px; color: white;
+      border: none; border-radius: 5px;
+      margin: 5px; font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <div id="welcome-screen" onclick="enterSite()">
+  <div id="welcome-screen">
     <h1>WELCOME TO MDBundles</h1>
     <h2>always the best deals</h2>
-    <div class="tap-text">tap to continue</div>
+    <div style="margin-top: 20px;">
+      <button class="auth-button" onclick="showLogin()">Login</button>
+      <button class="auth-button" onclick="showRegister()">Register</button>
+    </div>
+    <div class="tap-text">Already logged in? <span onclick="enterSite()" style="color: blue; cursor: pointer;">Tap to Continue</span></div>
   </div>
 
-  <div id="main-screen">
-    <button class="back-button" onclick="goBack()">Back</button>
-    <button class="access-button" onclick="showAccessPopup()">Access</button>
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <h2>Login to MDBundles</h2>
+    <input type="text" id="login-username" placeholder="Username">
+    <input type="password" id="login-password" placeholder="Password">
+    <button onclick="loginUser()">Login</button>
+    <button onclick="goBackToWelcome()">Back</button>
+  </div>
 
+  <!-- REGISTER -->
+  <div id="register-screen">
+    <h2>Create an Account</h2>
+    <input type="text" id="register-username" placeholder="Username">
+    <input type="password" id="register-password" placeholder="Password">
+    <input type="email" id="register-email" placeholder="Email">
+    <button onclick="registerUser()">Register</button>
+    <button onclick="goBackToWelcome()">Back</button>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="main-screen">
+    <button class="back-button" onclick="logout()">Logout</button>
+    <button class="access-button" onclick="showAccessPopup()">Access</button>
     <button class="button mtn-btn" onclick="showOptions('MTN')">
-      MTN
-      <small>everywhere you go....</small>
+      MTN <small>everywhere you go....</small>
     </button>
     <button class="button at-btn" onclick="showOptions('AT')">
-      AT (Airtel/Tigo)
-      <small>life is simple....</small>
+      AT (Airtel/Tigo) <small>life is simple....</small>
     </button>
   </div>
 
-  <div class="popup" id="options-popup">
-    <select id="data-plan">
-      <option value="1GB for GHc2">1GB for GHc2</option>
-      <option value="2GB for GHc12.3">2GB for GHc12.3</option>
-      <option value="3GB for GHC17.5">3GB for GHC17.5</option>
-      <option value="5GB for GHc30.2">5GB for GHc30.2</option>
-      <option value="8GB for GHc45">8GB for GHc45</option>
-      <option value="10GB for GHc62">10GB for GHc62</option>
-    </select>
-    <input type="text" id="recipient-number" placeholder="Recipient Number">
-    <input type="text" id="payer-number" placeholder="Your Number (to Pay)">
-    <input type="text" id="payer-name" placeholder="Your Name">
-    <input type="email" id="payer-email" placeholder="Your Email">
-    <button onclick="payWithPaystack()">Pay & Confirm</button>
-  </div>
-
-  <div class="popup" id="final-msg">
-    <p>✅ Payment received!<br>📞 Call or SMS <strong>0260879514</strong> to confirm your request is being processed.</p>
-    <button onclick="closeFinalPopup()">Close</button>
-  </div>
-
-  <div class="popup" id="access-popup">
-    <input type="password" id="admin-pass" placeholder="Enter Access Password">
-    <button onclick="checkPassword()">Confirm</button>
-  </div>
-
-  <script src="https://js.paystack.co/v1/inline.js"></script>
-  <script>
-    let selectedNetwork = "";
-
-    function enterSite() {
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('main-screen').style.display = 'flex';
-    }
-
-    function goBack() {
-      document.getElementById('main-screen').style.display = 'none';
-      document.getElementById('welcome-screen').style.display = 'flex';
-    }
-
-    function showOptions(network) {
-      selectedNetwork = network;
-      document.getElementById('options-popup').style.display = 'block';
-    }
-
-    function showAccessPopup() {
-      document.getElementById('access-popup').style.display = 'block';
-    }
-
-    function checkPassword() {
-      const pass = document.getElementById('admin-pass').value;
-      if (pass === 'Sethdora28') {
-        window.location.href = '/orders';
-      } else {
-        alert('Wrong password');
-      }
-    }
-
-    function closeFinalPopup() {
-      document.getElementById('final-msg').style.display = 'none';
-    }
-
-    function payWithPaystack() {
-      const plan = document.getElementById('data-plan').value;
-      const number = document.getElementById('recipient-number').value;
-      const payer = document.getElementById('payer-number').value;
-      const name = document.getElementById('payer-name').value;
-      const email = document.getElementById('payer-email').value;
-
-      const priceMap = {
-        "1GB for GHc2": 200,
-        "2GB for GHc12.3": 1230,
-        "3GB for GHC17.5": 1750,
-        "5GB for GHc30.2": 3020,
-        "8GB for GHc45": 4500,
-        "10GB for GHc62": 6200
-      };
-      const amount = priceMap[plan] || 0;
-
-      const handler = PaystackPop.setup({
-        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880', // replace if needed
-        email: email,
-        amount: amount,
-        currency: 'GHS',
-        callback: function(response) {
-          fetch('/verify-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              reference: response.reference,
-              network: selectedNetwork,
-              bundle: plan,
-              recipient: number,
-              payer: payer,
-              name: name,
-              email: email
-            })
-          })
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('options-popup').style.display = 'none';
-            document.getElementById('final-msg').style.display = 'block';
-          })
-          .catch(err => alert('❌ Error verifying payment'));
-        },
-        onClose: function() {
-          alert('Payment window closed');
-        }
-      });
-      handler.openIframe();
-    }
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MDBundles</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
-    #welcome-screen, #main-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100vh;
-      background: white;
-      position: relative;
-    }
-    #main-screen {
-      display: none;
-    }
-    h1 {
-      font-style: italic;
-      font-weight: bold;
-      font-size: 40px;
-      margin: 0;
-    }
-    h2 {
-      font-size: 30px;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    .tap-text {
-      position: absolute;
-      bottom: 20px;
-      font-size: 16px;
-      text-align: center;
-      width: 100%;
-      color: #333;
-    }
-    .button {
-      width: 5cm;
-      height: 3cm;
-      margin: 10px auto;
-      font-size: 18px;
-      font-weight: bold;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .mtn-btn {
-      background-color: yellow;
-      color: black;
-    }
-    .at-btn {
-      background: linear-gradient(to right, blue, red);
-    }
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 1px solid #ccc;
-      padding: 20px;
-      width: 90vw;
-      max-width: 400px;
-      font-size: 18px;
-      font-style: italic;
-      font-weight: bold;
-      border-radius: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: none;
-      z-index: 999;
-    }
-    .popup input, .popup select {
-      display: block;
-      margin: 10px 0;
-      padding: 8px;
-      width: 100%;
-      font-size: 18px;
-    }
-    .popup button {
-      padding: 10px;
-      margin-top: 10px;
-      width: 100%;
-      font-size: 18px;
-    }
-    .back-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: #ccc;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .access-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #4CAF50;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-  <div id="welcome-screen" onclick="enterSite()">
-    <h1>WELCOME TO MDBundles</h1>
-    <h2>always the best deals</h2>
-    <div class="tap-text">tap to continue</div>
-  </div>
-
-  <div id="main-screen">
-    <button class="back-button" onclick="goBack()">Back</button>
-    <button class="access-button" onclick="showAccessPopup()">Access</button>
-
-    <button class="button mtn-btn" onclick="showOptions('MTN')">
-      MTN
-      <small>everywhere you go....</small>
-    </button>
-    <button class="button at-btn" onclick="showOptions('AT')">
-      AT (Airtel/Tigo)
-      <small>life is simple....</small>
-    </button>
-  </div>
-
+  <!-- Data purchase popup -->
   <div class="popup" id="options-popup">
     <select id="data-plan">
       <option value="1GB for GHc0.2">1GB for GHc0.2</option>
@@ -412,35 +139,97 @@
       <option value="8GB for GHc45">8GB for GHc45</option>
       <option value="10GB for GHc62">10GB for GHc62</option>
     </select>
-    <input type="text" id="recipient-number" placeholder="Recipient Number">
-    <input type="text" id="payer-number" placeholder="Your Number (to Pay)">
-    <input type="text" id="payer-name" placeholder="Your Name">
-    <input type="email" id="payer-email" placeholder="Your Email">
+    <input type="text" id="recipient-number" placeholder="Enter recipient number">
+    <input type="text" id="payer-number" placeholder="Enter your number to pay">
+    <input type="text" id="payer-name" placeholder="Enter your name">
+    <input type="email" id="payer-email" placeholder="Enter your email">
     <button onclick="payWithPaystack()">Pay & Confirm</button>
   </div>
 
+  <!-- Confirmation message -->
   <div class="popup" id="final-msg">
-    <p>✅ Payment received!<br>📞 Call or SMS <strong>0260879514</strong> to confirm your request is being processed.</p>
-    <button onclick="closeFinalPopup()">Close</button>
+    <p>Call or SMS <a href="tel:0260879514">0260879514</a> to verify that your payment is being processed.</p>
   </div>
 
+  <!-- Admin Access Popup -->
   <div class="popup" id="access-popup">
     <input type="password" id="admin-pass" placeholder="Enter Access Password">
     <button onclick="checkPassword()">Confirm</button>
   </div>
 
+  <!-- Paystack -->
   <script src="https://js.paystack.co/v1/inline.js"></script>
+
   <script>
     let selectedNetwork = "";
 
     function enterSite() {
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('main-screen').style.display = 'flex';
+      if (localStorage.getItem('loggedIn') === 'true') {
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('main-screen').style.display = 'flex';
+      } else {
+        alert('Please login first.');
+      }
     }
 
-    function goBack() {
+    function logout() {
+      localStorage.removeItem('loggedIn');
       document.getElementById('main-screen').style.display = 'none';
       document.getElementById('welcome-screen').style.display = 'flex';
+    }
+
+    function goBackToWelcome() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('register-screen').style.display = 'none';
+      document.getElementById('welcome-screen').style.display = 'flex';
+    }
+
+    function showLogin() {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    function showRegister() {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('register-screen').style.display = 'flex';
+    }
+
+    function loginUser() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      }).then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            localStorage.setItem('loggedIn', 'true');
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'flex';
+          } else {
+            alert(data.message || 'Login failed');
+          }
+        });
+    }
+
+    function registerUser() {
+      const username = document.getElementById('register-username').value;
+      const password = document.getElementById('register-password').value;
+      const email = document.getElementById('register-email').value;
+      fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, email })
+      }).then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("Registered! Now log in.");
+            goBackToWelcome();
+          } else {
+            alert(data.message || 'Register failed');
+          }
+        });
     }
 
     function showOptions(network) {
@@ -459,10 +248,6 @@
       } else {
         alert('Wrong password');
       }
-    }
-
-    function closeFinalPopup() {
-      document.getElementById('final-msg').style.display = 'none';
     }
 
     function payWithPaystack() {
@@ -483,7 +268,7 @@
       const amount = priceMap[plan] || 0;
 
       const handler = PaystackPop.setup({
-        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880', // replace if needed
+        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880',
         email: email,
         amount: amount,
         currency: 'GHS',
@@ -500,13 +285,12 @@
               name: name,
               email: email
             })
-          })
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('options-popup').style.display = 'none';
-            document.getElementById('final-msg').style.display = 'block';
-          })
-          .catch(err => alert('❌ Error verifying payment'));
+          }).then(res => res.json())
+            .then(data => {
+              document.getElementById('options-popup').style.display = 'none';
+              document.getElementById('final-msg').style.display = 'block';
+            })
+            .catch(err => alert('Error verifying payment'));
         },
         onClose: function() {
           alert('Payment window closed');
