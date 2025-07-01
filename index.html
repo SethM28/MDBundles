@@ -6,133 +6,164 @@
   <title>MDBundles</title>
   <style>
     html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
       font-family: Arial, sans-serif;
       overflow: hidden;
     }
-    #welcome-screen, #main-screen, #login-screen, #register-screen {
-      display: none;
+    #welcome-screen, #main-screen {
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100%; height: 100vh;
+      width: 100%;
+      height: 100vh;
       background: white;
       position: relative;
     }
-    #welcome-screen {
-      display: flex;
+    #main-screen {
+      display: none;
     }
     h1 {
-      font-style: italic; font-weight: bold;
-      font-size: 40px; margin: 0;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 40px;
+      margin: 0;
     }
     h2 {
-      font-size: 30px; font-weight: bold;
+      font-size: 30px;
+      font-weight: bold;
       margin: 10px 0;
     }
     .tap-text {
-      position: absolute; bottom: 20px;
-      font-size: 16px; width: 100%; text-align: center;
+      position: absolute;
+      bottom: 20px;
+      font-size: 16px;
+      text-align: center;
+      width: 100%;
       color: #333;
     }
     .button {
-      width: 5cm; height: 3cm;
-      margin: 10px auto; font-size: 18px;
-      font-weight: bold; color: white;
-      border: none; border-radius: 5px;
-      cursor: pointer; display: flex;
-      flex-direction: column; justify-content: center;
+      width: 5cm;
+      height: 3cm;
+      margin: 10px auto;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
     }
-    .mtn-btn { background-color: yellow; color: black; }
-    .at-btn { background: linear-gradient(to right, blue, red); }
+    .mtn-btn {
+      background-color: yellow;
+      color: black;
+    }
+    .at-btn {
+      background: linear-gradient(to right, blue, red);
+    }
     .popup {
-      position: fixed; top: 50%; left: 50%;
+      position: fixed;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      background: white; border: 1px solid #ccc;
-      padding: 20px; width: 90vw; max-width: 400px;
-      font-size: 18px; font-style: italic;
-      font-weight: bold; border-radius: 20px;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+      width: 90vw;
+      max-width: 400px;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: bold;
+      border-radius: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: none; z-index: 999;
+      display: none;
+      z-index: 999;
     }
     .popup input, .popup select {
-      display: block; margin: 10px 0;
-      padding: 8px; width: 100%;
-      font-size: 18px; font-style: italic; font-weight: bold;
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: bold;
     }
     .popup button {
-      padding: 10px; margin-top: 10px;
-      width: 100%; font-size: 18px;
-      font-style: italic; font-weight: bold;
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: bold;
     }
     .back-button {
-      position: absolute; top: 10px; left: 10px;
-      background-color: #ccc; border: none;
-      padding: 8px 12px; border-radius: 4px;
-      cursor: pointer; font-weight: bold;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #ccc;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
     }
     .access-button {
-      position: absolute; top: 10px; right: 10px;
-      background-color: #4CAF50; border: none;
-      padding: 8px 12px; border-radius: 4px;
-      cursor: pointer; font-weight: bold; color: white;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #4CAF50;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
     }
-    .auth-button {
-      background: #4CAF50;
-      padding: 10px 20px; color: white;
-      border: none; border-radius: 5px;
-      margin: 5px; font-size: 16px;
+    .logout-button {
+      position: absolute;
+      top: 10px;
+      right: 100px;
+      background-color: red;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <div id="welcome-screen">
+  <div id="welcome-screen" onclick="enterSite()">
     <h1>WELCOME TO MDBundles</h1>
     <h2>always the best deals</h2>
-    <div style="margin-top: 20px;">
-      <button class="auth-button" onclick="showLogin()">Login</button>
-      <button class="auth-button" onclick="showRegister()">Register</button>
-    </div>
-    <div class="tap-text">Already logged in? <span onclick="enterSite()" style="color: blue; cursor: pointer;">Tap to Continue</span></div>
+    <div class="tap-text">tap to continue</div>
   </div>
 
-  <!-- LOGIN -->
-  <div id="login-screen">
-    <h2>Login to MDBundles</h2>
-    <input type="text" id="login-username" placeholder="Username">
-    <input type="password" id="login-password" placeholder="Password">
-    <button onclick="loginUser()">Login</button>
-    <button onclick="goBackToWelcome()">Back</button>
-  </div>
-
-  <!-- REGISTER -->
-  <div id="register-screen">
-    <h2>Create an Account</h2>
-    <input type="text" id="register-username" placeholder="Username">
-    <input type="password" id="register-password" placeholder="Password">
-    <input type="email" id="register-email" placeholder="Email">
-    <button onclick="registerUser()">Register</button>
-    <button onclick="goBackToWelcome()">Back</button>
-  </div>
-
-  <!-- MAIN APP -->
   <div id="main-screen">
-    <button class="back-button" onclick="logout()">Logout</button>
+    <button class="back-button" onclick="goBack()">Back</button>
+    <button class="logout-button" onclick="logoutUser()">Logout</button>
     <button class="access-button" onclick="showAccessPopup()">Access</button>
+
     <button class="button mtn-btn" onclick="showOptions('MTN')">
-      MTN <small>everywhere you go....</small>
+      MTN
+      <small>everywhere you go....</small>
     </button>
     <button class="button at-btn" onclick="showOptions('AT')">
-      AT (Airtel/Tigo) <small>life is simple....</small>
+      AT (Airtel/Tigo)
+      <small>life is simple....</small>
     </button>
   </div>
 
-  <!-- Data purchase popup -->
   <div class="popup" id="options-popup">
     <select id="data-plan">
-      <option value="1GB for GHc0.2">1GB for GHc0.2</option>
+      <option value="1GB for GHc2">1GB for GHc2</option>
       <option value="2GB for GHc12.3">2GB for GHc12.3</option>
       <option value="3GB for GHC17.5">3GB for GHC17.5</option>
       <option value="5GB for GHc30.2">5GB for GHc30.2</option>
@@ -146,95 +177,41 @@
     <button onclick="payWithPaystack()">Pay & Confirm</button>
   </div>
 
-  <!-- Confirmation message -->
   <div class="popup" id="final-msg">
-    <p>Call or SMS <a href="tel:0260879514">0260879514</a> to verify that your payment is being processed.</p>
+    <p>✅ Your payment was successful.<br>📞 Call or SMS <strong><a href="tel:0260879514">0260879514</a></strong> to verify that your request is being processed.</p>
+    <button onclick="closeFinal()">OK</button>
   </div>
 
-  <!-- Admin Access Popup -->
   <div class="popup" id="access-popup">
     <input type="password" id="admin-pass" placeholder="Enter Access Password">
     <button onclick="checkPassword()">Confirm</button>
   </div>
 
-  <!-- Paystack -->
   <script src="https://js.paystack.co/v1/inline.js"></script>
-
   <script>
-    let selectedNetwork = "";
-
     function enterSite() {
-      if (localStorage.getItem('loggedIn') === 'true') {
-        document.getElementById('welcome-screen').style.display = 'none';
-        document.getElementById('main-screen').style.display = 'flex';
-      } else {
-        alert('Please login first.');
-      }
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('main-screen').style.display = 'flex';
     }
 
-    function logout() {
-      localStorage.removeItem('loggedIn');
+    function goBack() {
       document.getElementById('main-screen').style.display = 'none';
       document.getElementById('welcome-screen').style.display = 'flex';
-    }
-
-    function goBackToWelcome() {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('register-screen').style.display = 'none';
-      document.getElementById('welcome-screen').style.display = 'flex';
-    }
-
-    function showLogin() {
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('login-screen').style.display = 'flex';
-    }
-
-    function showRegister() {
-      document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('register-screen').style.display = 'flex';
-    }
-
-    function loginUser() {
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
-      fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      }).then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            localStorage.setItem('loggedIn', 'true');
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-screen').style.display = 'flex';
-          } else {
-            alert(data.message || 'Login failed');
-          }
-        });
-    }
-
-    function registerUser() {
-      const username = document.getElementById('register-username').value;
-      const password = document.getElementById('register-password').value;
-      const email = document.getElementById('register-email').value;
-      fetch('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, email })
-      }).then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Registered! Now log in.");
-            goBackToWelcome();
-          } else {
-            alert(data.message || 'Register failed');
-          }
-        });
     }
 
     function showOptions(network) {
       selectedNetwork = network;
       document.getElementById('options-popup').style.display = 'block';
+    }
+
+    function closeFinal() {
+      document.getElementById('final-msg').style.display = 'none';
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('loggedIn');
+      alert('Logged out');
+      window.location.reload();
     }
 
     function showAccessPopup() {
@@ -250,6 +227,8 @@
       }
     }
 
+    let selectedNetwork = "";
+
     function payWithPaystack() {
       const plan = document.getElementById('data-plan').value;
       const number = document.getElementById('recipient-number').value;
@@ -258,7 +237,7 @@
       const email = document.getElementById('payer-email').value;
 
       const priceMap = {
-        "1GB for GHc0.2": 20,
+        "1GB for GHc2": 200,
         "2GB for GHc12.3": 1230,
         "3GB for GHC17.5": 1750,
         "5GB for GHc30.2": 3020,
@@ -268,7 +247,7 @@
       const amount = priceMap[plan] || 0;
 
       const handler = PaystackPop.setup({
-        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880',
+        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880', // Replace if needed
         email: email,
         amount: amount,
         currency: 'GHS',
@@ -285,12 +264,13 @@
               name: name,
               email: email
             })
-          }).then(res => res.json())
-            .then(data => {
-              document.getElementById('options-popup').style.display = 'none';
-              document.getElementById('final-msg').style.display = 'block';
-            })
-            .catch(err => alert('Error verifying payment'));
+          })
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('options-popup').style.display = 'none';
+            document.getElementById('final-msg').style.display = 'block';
+          })
+          .catch(err => alert('Error verifying payment'));
         },
         onClose: function() {
           alert('Payment window closed');
