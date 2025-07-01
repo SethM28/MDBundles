@@ -113,30 +113,6 @@
       cursor: pointer;
       font-weight: bold;
     }
-    .access-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #4CAF50;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      color: white;
-    }
-    .logout-button {
-      position: absolute;
-      top: 10px;
-      right: 100px;
-      background-color: red;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      color: white;
-    }
   </style>
 </head>
 <body>
@@ -148,8 +124,6 @@
 
   <div id="main-screen">
     <button class="back-button" onclick="goBack()">Back</button>
-    <button class="logout-button" onclick="logoutUser()">Logout</button>
-    <button class="access-button" onclick="showAccessPopup()">Access</button>
 
     <button class="button mtn-btn" onclick="showOptions('MTN')">
       MTN
@@ -178,13 +152,7 @@
   </div>
 
   <div class="popup" id="final-msg">
-    <p>✅ Your payment was successful.<br>📞 Call or SMS <strong><a href="tel:0260879514">0260879514</a></strong> to verify that your request is being processed.</p>
-    <button onclick="closeFinal()">OK</button>
-  </div>
-
-  <div class="popup" id="access-popup">
-    <input type="password" id="admin-pass" placeholder="Enter Access Password">
-    <button onclick="checkPassword()">Confirm</button>
+    <p>Call or SMS <a href="tel:0260879514">0260879514</a> to verify that your request is being processed.</p>
   </div>
 
   <script src="https://js.paystack.co/v1/inline.js"></script>
@@ -202,29 +170,6 @@
     function showOptions(network) {
       selectedNetwork = network;
       document.getElementById('options-popup').style.display = 'block';
-    }
-
-    function closeFinal() {
-      document.getElementById('final-msg').style.display = 'none';
-    }
-
-    function logoutUser() {
-      localStorage.removeItem('loggedIn');
-      alert('Logged out');
-      window.location.reload();
-    }
-
-    function showAccessPopup() {
-      document.getElementById('access-popup').style.display = 'block';
-    }
-
-    function checkPassword() {
-      const pass = document.getElementById('admin-pass').value;
-      if (pass === 'Sethdora28') {
-        window.location.href = '/orders';
-      } else {
-        alert('Wrong password');
-      }
     }
 
     let selectedNetwork = "";
@@ -247,30 +192,13 @@
       const amount = priceMap[plan] || 0;
 
       const handler = PaystackPop.setup({
-        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880', // Replace if needed
+        key: 'pk_live_6183e6db42828c50ccf8e760b334bb6e4ddb1880',
         email: email,
         amount: amount,
         currency: 'GHS',
         callback: function(response) {
-          fetch('/verify-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              reference: response.reference,
-              network: selectedNetwork,
-              bundle: plan,
-              recipient: number,
-              payer: payer,
-              name: name,
-              email: email
-            })
-          })
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('options-popup').style.display = 'none';
-            document.getElementById('final-msg').style.display = 'block';
-          })
-          .catch(err => alert('Error verifying payment'));
+          document.getElementById('options-popup').style.display = 'none';
+          document.getElementById('final-msg').style.display = 'block';
         },
         onClose: function() {
           alert('Payment window closed');
