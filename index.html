@@ -116,7 +116,7 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      background-color: #4CAF50;
+      background-color: rgba(255,0,0,0.5);
       border: none;
       padding: 8px 12px;
       border-radius: 4px;
@@ -144,7 +144,7 @@
 
   </div>  <div class="popup" id="options-popup">
     <select id="data-plan">
-      <option value="1GB for GHc2">1GB for GHc2</option>
+      <option value="1GB for GHc0.2">1GB for GHc0.2</option>
       <option value="2GB for GHc12.3">2GB for GHc12.3</option>
       <option value="3GB for GHC17.5">3GB for GHC17.5</option>
       <option value="5GB for GHc30.2">5GB for GHc30.2</option>
@@ -157,7 +157,7 @@
     <input type="email" id="payer-email" placeholder="Enter your email">
     <button onclick="payWithPaystack()">Pay & Confirm</button>
   </div>  <div class="popup" id="final-msg">
-    <p>Call or SMS <a href="tel:0597450073">0597450073</a> to make sure your request is being processed.</p>
+    <p><b>WhatsApp</b> or SMS <a href="tel:0260879514"><i></b>0260879514</b></i></a> to make sure your request is being processed.</p>
   </div>  <div class="popup" id="access-popup">
     <input type="password" id="admin-pass" placeholder="Enter Access Password">
     <button onclick="checkPassword()">Confirm</button>
@@ -200,7 +200,7 @@
       const email = document.getElementById('payer-email').value;
 
       const priceMap = {
-        "1GB for GHc2": 200,
+        "1GB for GHc0.2": 20,
         "2GB for GHc12.3": 1230,
         "3GB for GHC17.5": 1750,
         "5GB for GHc30.2": 3020,
