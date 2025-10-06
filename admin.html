@@ -1,149 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal - MDBundles</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal - Super High Services</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f7fc;
+      background: #f3f4f6;
       margin: 0;
       padding: 20px;
     }
-    h2 {
+    h1, h2 {
       text-align: center;
-      color: #0066cc;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 15px;
       background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
     }
     th, td {
       padding: 10px;
-      border-bottom: 1px solid #ddd;
+      border: 1px solid #ccc;
       text-align: left;
     }
     th {
-      background: #0066cc;
+      background: #2563eb;
       color: white;
     }
-    button {
-      padding: 6px 10px;
-      background: #28a745;
+    .approve-btn, .remove-btn {
+      padding: 5px 10px;
       border: none;
-      color: white;
+      cursor: pointer;
       border-radius: 4px;
+      color: white;
     }
-    button:disabled {
-      background: #999;
+    .approve-btn {
+      background: #16a34a;
     }
-    .section {
-      margin-bottom: 40px;
+    .remove-btn {
+      background: #dc2626;
     }
   </style>
 </head>
 <body>
-  <h2>Admin Portal - MDBundles</h2>
+  <h1>Super High Services Admin Portal</h1>
+  <p style="text-align:center;">(Page refreshes every 30 seconds)</p>
 
-  <div class="section">
-    <h3>👥 Registered Users</h3>
-    <table id="userTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <h2>Registered Users</h2>
+  <table id="usersTable">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-  <div class="section">
-    <h3>📦 Orders Made</h3>
-    <table id="orderTable">
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Email</th>
-          <th>Network</th>
-          <th>Bundle</th>
-          <th>Phone</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <h2>Orders</h2>
+  <table id="ordersTable">
+    <thead>
+      <tr>
+        <th>User Email</th>
+        <th>Network</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script>
+    // ✅ Set your admin email here (only this email can access)
+    const adminEmail = "sethmartey@gmail.com";
+
     // Check admin access
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (!currentUser || currentUser.role !== 'admin') {
-      alert('Access denied. Admins only.');
-      window.location.href = 'login.html';
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser || loggedInUser.email !== adminEmail) {
+      alert("Access denied! Admins only.");
+      window.location.href = "login.html";
     }
 
-    // Function to load and display data
-    function loadData() {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    // Load users and orders from localStorage
+    function loadAdminData() {
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-      const userBody = document.querySelector("#userTable tbody");
-      const orderBody = document.querySelector("#orderTable tbody");
-      userBody.innerHTML = '';
-      orderBody.innerHTML = '';
-
-      // Display users
+      // Load users
+      const usersTable = document.querySelector("#usersTable tbody");
+      usersTable.innerHTML = "";
       users.forEach((user, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${user.name}</td>
           <td>${user.email}</td>
-          <td>${user.approved ? "✅ Approved" : "⏳ Pending"}</td>
+          <td>${user.name}</td>
+          <td>${user.approved ? "✅ Approved" : "❌ Pending"}</td>
           <td>
-            <button ${user.approved ? "disabled" : ""} onclick="approveUser(${index})">Approve</button>
+            <button class="approve-btn" onclick="approveUser(${index})">Approve</button>
+            <button class="remove-btn" onclick="removeUser(${index})">Remove</button>
           </td>
         `;
-        userBody.appendChild(row);
+        usersTable.appendChild(row);
       });
 
-      // Display orders
-      orders.slice().reverse().forEach(order => {
+      // Load orders
+      const ordersTable = document.querySelector("#ordersTable tbody");
+      ordersTable.innerHTML = "";
+      orders.forEach(order => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${new Date(order.time).toLocaleString()}</td>
-          <td>${order.email}</td>
+          <td>${order.userEmail}</td>
           <td>${order.network}</td>
-          <td>${order.bundle}</td>
-          <td>${order.phone}</td>
-          <td>${order.status || 'Pending'}</td>
+          <td>${order.amount}</td>
+          <td>${order.status}</td>
+          <td>${order.date}</td>
         `;
-        orderBody.appendChild(row);
+        ordersTable.appendChild(row);
       });
     }
 
-    // Approve user
     function approveUser(index) {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const users = JSON.parse(localStorage.getItem("users")) || [];
       users[index].approved = true;
-      localStorage.setItem('users', JSON.stringify(users));
-      alert(`${users[index].name} has been approved!`);
-      loadData();
+      localStorage.setItem("users", JSON.stringify(users));
+      alert(`${users[index].email} has been approved.`);
+      loadAdminData();
     }
 
-    // Load initially
-    loadData();
+    function removeUser(index) {
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const removedUser = users.splice(index, 1);
+      localStorage.setItem("users", JSON.stringify(users));
+      alert(`${removedUser[0].email} has been removed.`);
+      loadAdminData();
+    }
 
-    // Auto refresh every 30 seconds
-    setInterval(loadData, 30000);
+    // Refresh every 30 seconds
+    setInterval(() => {
+      loadAdminData();
+    }, 30000);
+
+    // Initial load
+    loadAdminData();
   </script>
 </body>
-  </html>
+</html>
