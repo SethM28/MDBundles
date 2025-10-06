@@ -1,63 +1,70 @@
-<!-- index.html --><!DOCTYPE html><html lang="en">
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MDBundles - Login</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <title>Welcome | MDBundles</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #1976d2, #64b5f6);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.1em;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    a {
+      text-decoration: none;
+      background: white;
+      color: #1565c0;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      background: #bbdefb;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9em;
+      color: #e3f2fd;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Login to MDBundles</h2>
-    <form action="/login" method="POST">
-      <input type="email" name="email" placeholder="Email" required><br>
-      <input type="password" name="password" placeholder="Password" required><br>
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/register.html">Register here</a></p>
+  <h1>Welcome to MDBundles</h1>
+  <p>Your trusted data bundle service — fast, reliable, and secure.</p>
+
+  <div class="buttons">
+    <a href="/login.html">Login</a>
+    <a href="/register.html">Register</a>
   </div>
-</body>
-</html><!-- register.html --><!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MDBundles - Register</title>
-  <link rel="stylesheet" href="/styles.css" />
-</head>
-<body>
-  <div class="container">
-    <h2>Register for MDBundles</h2>
-    <form action="/register" method="POST">
-      <input type="text" name="name" placeholder="Full Name" required><br>
-      <input type="email" name="email" placeholder="Email" required><br>
-      <input type="password" name="password" placeholder="Password" required><br>
-      <input type="tel" name="phone" placeholder="Phone Number" required><br>
-      <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="/index.html">Login here</a></p>
-  </div>
-</body>
-</html><!-- dashboard.html --><!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MDBundles Dashboard</title>
-  <link rel="stylesheet" href="/styles.css" />
-</head>
-<body>
-  <div class="container">
-    <h2>Welcome to your Dashboard</h2>
-    <p id="user-email"></p>
-    <nav>
-      <ul>
-        <li><a href="#">Wallet</a></li>
-        <li><a href="#">Buy Data</a></li>
-        <li><a href="#">Order History</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-    </nav>
-    <div id="dashboard-content">
-      <!-- Dynamic content will load here -->
-    </div>
-  </div>
+
+  <footer>© 2025 MDBundles. All rights reserved.</footer>
 </body>
 </html>
