@@ -7,44 +7,29 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
+      background: #f7f8fc;
       color: #333;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      padding: 20px;
     }
     header {
-      background: #0066ff;
+      background-color: #007bff;
       color: white;
       padding: 15px;
-      font-size: 20px;
+      text-align: center;
+      border-radius: 8px;
     }
-    section {
-      margin: 20px;
+    .wallet {
+      margin: 20px auto;
+      padding: 15px;
       background: white;
       border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      max-width: 400px;
+      text-align: center;
     }
-    input, select, textarea, button {
-      width: 90%;
-      margin: 10px 0;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      background: #0066ff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #004ecc;
-    }
-    h3 {
-      color: #0066ff;
+    .orders {
+      margin-top: 30px;
     }
     table {
       width: 100%;
@@ -53,113 +38,112 @@
     }
     th, td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 10px;
+      text-align: left;
     }
     th {
-      background: #0066ff;
+      background-color: #007bff;
       color: white;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <header>Welcome to MDBundles Dashboard</header>
+  <header>
+    <h2>Welcome to MDBundles Dashboard</h2>
+  </header>
 
-  <section>
-    <h3>Wallet Balance</h3>
-    <p id="balance">Loading...</p>
-    <input type="number" id="topupAmount" placeholder="Enter amount to top-up" />
-    <button onclick="topUpWallet()">Top Up Wallet</button>
-  </section>
+  <div class="wallet">
+    <h3>Your Wallet Balance: <span id="balance">Loading...</span> GHS</h3>
+    <button onclick="topUp()">Top Up Wallet</button>
+    <button onclick="logout()">Logout</button>
+  </div>
 
-  <section>
-    <h3>Buy Data Bundle</h3>
-    <select id="network">
-      <option value="MTN">MTN</option>
-      <option value="AirtelTigo">AirtelTigo</option>
-      <option value="Telecel">Telecel</option>
-    </select>
-    <input type="number" id="bundle" placeholder="Enter bundle size (e.g. 1 for 1GB)" />
-    <input type="text" id="phone" placeholder="Enter recipient phone (10 digits)" />
-    <button onclick="placeOrder()">Place Order</button>
-  </section>
-
-  <section>
-    <h3>Order History</h3>
-    <table id="ordersTable">
+  <div class="orders">
+    <h3>Your Order History</h3>
+    <table>
       <thead>
         <tr>
           <th>Time</th>
           <th>Network</th>
           <th>Bundle</th>
-          <th>Recipient</th>
+          <th>Phone</th>
           <th>Status</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody id="ordersBody">
+        <tr><td colspan="5" align="center">Loading orders...</td></tr>
+      </tbody>
     </table>
-  </section>
+  </div>
 
   <script>
-    const sessionId = localStorage.getItem('sessionId');
-    if (!sessionId) {
-      alert("Please login first!");
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("sessionId");
+
+    async function loadDashboard() {
+      const res = await fetch(`/dashboard?sessionId=${sessionId}`);
+      if (!res.ok) {
+        alert("Session expired or invalid. Please log in again.");
+        window.location.href = "login.html";
+        return;
+      }
+      const data = await res.json();
+      document.getElementById("balance").textContent = data.balance;
+
+      const tbody = document.getElementById("ordersBody");
+      tbody.innerHTML = "";
+      if (data.orders.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5' align='center'>No orders yet</td></tr>";
+      } else {
+        data.orders.reverse().forEach(order => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${new Date(order.time).toLocaleString()}</td>
+            <td>${order.network}</td>
+            <td>${order.bundle}</td>
+            <td>${order.phone}</td>
+            <td>${order.status}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+    }
+
+    function logout() {
+      alert("Logged out successfully!");
       window.location.href = "login.html";
     }
 
-    function loadDashboard() {
-      fetch(`/dashboard?sessionId=${sessionId}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('balance').innerText = "₵" + data.balance;
-          const tableBody = document.querySelector('#ordersTable tbody');
-          tableBody.innerHTML = "";
-          data.orders.forEach(o => {
-            const row = `<tr>
-              <td>${new Date(o.time).toLocaleString()}</td>
-              <td>${o.network}</td>
-              <td>${o.bundle}GB</td>
-              <td>${o.phone}</td>
-              <td>${o.status}</td>
-            </tr>`;
-            tableBody.innerHTML += row;
-          });
-        })
-        .catch(err => console.error(err));
-    }
+    function topUp() {
+      const amount = prompt("Enter amount to top up:");
+      if (!amount || isNaN(amount)) return alert("Invalid amount");
 
-    function topUpWallet() {
-      const amount = document.getElementById('topupAmount').value;
-      fetch('/wallet/topup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, amount })
+      fetch("/wallet/topup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, amount }),
       })
-      .then(res => res.text())
-      .then(alert)
-      .then(loadDashboard);
+        .then((res) => res.text())
+        .then((msg) => {
+          alert(msg);
+          loadDashboard();
+        });
     }
 
-    function placeOrder() {
-      const network = document.getElementById('network').value;
-      const bundle = document.getElementById('bundle').value;
-      const phone = document.getElementById('phone').value;
-      if (phone.length !== 10 || phone[0] !== '0') {
-        alert("Invalid phone number format");
-        return;
-      }
-      fetch('/order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, network, bundle, phone })
-      })
-      .then(res => res.text())
-      .then(alert)
-      .then(loadDashboard);
-    }
-
-    // Auto-refresh every 30 seconds
-    setInterval(loadDashboard, 30000);
+    // Load immediately and refresh every 30 seconds
     loadDashboard();
+    setInterval(loadDashboard, 30000);
   </script>
 </body>
 </html>
