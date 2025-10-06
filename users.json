@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "Seth Martey",
+    "email": "seth@admin.com",
+    "password": "admin123",
+    "status": "approved",
+    "role": "admin",
+    "wallet": 0,
+    "orders": []
+  }
+]
