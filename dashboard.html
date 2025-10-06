@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MDBundles Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background: #0066ff;
+      color: white;
+      padding: 15px;
+      font-size: 20px;
+    }
+    section {
+      margin: 20px;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    input, select, textarea, button {
+      width: 90%;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background: #0066ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #004ecc;
+    }
+    h3 {
+      color: #0066ff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background: #0066ff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>Welcome to MDBundles Dashboard</header>
+
+  <section>
+    <h3>Wallet Balance</h3>
+    <p id="balance">Loading...</p>
+    <input type="number" id="topupAmount" placeholder="Enter amount to top-up" />
+    <button onclick="topUpWallet()">Top Up Wallet</button>
+  </section>
+
+  <section>
+    <h3>Buy Data Bundle</h3>
+    <select id="network">
+      <option value="MTN">MTN</option>
+      <option value="AirtelTigo">AirtelTigo</option>
+      <option value="Telecel">Telecel</option>
+    </select>
+    <input type="number" id="bundle" placeholder="Enter bundle size (e.g. 1 for 1GB)" />
+    <input type="text" id="phone" placeholder="Enter recipient phone (10 digits)" />
+    <button onclick="placeOrder()">Place Order</button>
+  </section>
+
+  <section>
+    <h3>Order History</h3>
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Network</th>
+          <th>Bundle</th>
+          <th>Recipient</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script>
+    const sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+      alert("Please login first!");
+      window.location.href = "login.html";
+    }
+
+    function loadDashboard() {
+      fetch(`/dashboard?sessionId=${sessionId}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('balance').innerText = "₵" + data.balance;
+          const tableBody = document.querySelector('#ordersTable tbody');
+          tableBody.innerHTML = "";
+          data.orders.forEach(o => {
+            const row = `<tr>
+              <td>${new Date(o.time).toLocaleString()}</td>
+              <td>${o.network}</td>
+              <td>${o.bundle}GB</td>
+              <td>${o.phone}</td>
+              <td>${o.status}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+          });
+        })
+        .catch(err => console.error(err));
+    }
+
+    function topUpWallet() {
+      const amount = document.getElementById('topupAmount').value;
+      fetch('/wallet/topup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, amount })
+      })
+      .then(res => res.text())
+      .then(alert)
+      .then(loadDashboard);
+    }
+
+    function placeOrder() {
+      const network = document.getElementById('network').value;
+      const bundle = document.getElementById('bundle').value;
+      const phone = document.getElementById('phone').value;
+      if (phone.length !== 10 || phone[0] !== '0') {
+        alert("Invalid phone number format");
+        return;
+      }
+      fetch('/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, network, bundle, phone })
+      })
+      .then(res => res.text())
+      .then(alert)
+      .then(loadDashboard);
+    }
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadDashboard, 30000);
+    loadDashboard();
+  </script>
+</body>
+</html>
