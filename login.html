@@ -58,7 +58,7 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const res = await fetch("/login", {
+      const res = await fetch("https://mdbundles-server.onrender.com/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
