@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - MDBundles</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fc;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #0066cc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #0066cc;
+      color: white;
+    }
+    button {
+      padding: 6px 10px;
+      background: #28a745;
+      border: none;
+      color: white;
+      border-radius: 4px;
+    }
+    button:disabled {
+      background: #999;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Admin Portal - MDBundles</h2>
+
+  <div class="section">
+    <h3>👥 Registered Users</h3>
+    <table id="userTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>📦 Orders Made</h3>
+    <table id="orderTable">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Email</th>
+          <th>Network</th>
+          <th>Bundle</th>
+          <th>Phone</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    // Check admin access
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || currentUser.role !== 'admin') {
+      alert('Access denied. Admins only.');
+      window.location.href = 'login.html';
+    }
+
+    // Function to load and display data
+    function loadData() {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+      const userBody = document.querySelector("#userTable tbody");
+      const orderBody = document.querySelector("#orderTable tbody");
+      userBody.innerHTML = '';
+      orderBody.innerHTML = '';
+
+      // Display users
+      users.forEach((user, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.approved ? "✅ Approved" : "⏳ Pending"}</td>
+          <td>
+            <button ${user.approved ? "disabled" : ""} onclick="approveUser(${index})">Approve</button>
+          </td>
+        `;
+        userBody.appendChild(row);
+      });
+
+      // Display orders
+      orders.slice().reverse().forEach(order => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${new Date(order.time).toLocaleString()}</td>
+          <td>${order.email}</td>
+          <td>${order.network}</td>
+          <td>${order.bundle}</td>
+          <td>${order.phone}</td>
+          <td>${order.status || 'Pending'}</td>
+        `;
+        orderBody.appendChild(row);
+      });
+    }
+
+    // Approve user
+    function approveUser(index) {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      users[index].approved = true;
+      localStorage.setItem('users', JSON.stringify(users));
+      alert(`${users[index].name} has been approved!`);
+      loadData();
+    }
+
+    // Load initially
+    loadData();
+
+    // Auto refresh every 30 seconds
+    setInterval(loadData, 30000);
+  </script>
+</body>
+  </html>
