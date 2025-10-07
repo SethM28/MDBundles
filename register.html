@@ -3,106 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - MDBundles</title>
+  <title>MDBundles - Register</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #5b86e5, #36d1dc);
+      background: linear-gradient(135deg, #007bff, #00d4ff);
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
     }
-    .register-container {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      width: 350px;
-      text-align: center;
-    }
-    h2 {
-      color: #333;
+    .container {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
     }
     input {
-      width: 90%;
+      width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      outline: none;
+      border: none;
+      border-radius: 5px;
     }
     button {
-      background: #36d1dc;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
       width: 100%;
-      font-size: 16px;
+      padding: 10px;
+      background: #00ffb3;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
     }
     button:hover {
-      background: #5b86e5;
-    }
-    p {
-      margin-top: 10px;
-    }
-    a {
-      color: #5b86e5;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+      background: #00cc8a;
     }
   </style>
 </head>
 <body>
-
-  <div class="register-container">
-    <h2>Create Account</h2>
-    <input type="text" id="username" placeholder="Full Name" required><br>
-    <input type="email" id="email" placeholder="Email Address" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
-    <button onclick="register()">Register</button>
-    <p>Already have an account? <a href="login.html">Login here</a></p>
+  <div class="container">
+    <h2>Create Your MDBundles Account</h2>
+    <form onsubmit="register(event)">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email Address" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="login.html" style="color:#00ffb3;">Login here</a></p>
   </div>
 
   <script>
-    function register() {
-      const username = document.getElementById('username').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+    async function register(event) {
+      event.preventDefault();
 
-      if (!username || !email || !password) {
-        alert('Please fill in all fields');
-        return;
-      }
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-
-      // Check if email already exists
-      if (users.find(u => u.email === email)) {
-        alert('Email already registered.');
-        return;
-      }
-
-      // Save user as unapproved
-      users.push({
-        username,
-        email,
-        password,
-        wallet: 0,
-        orders: [],
-        approved: false
+      const res = await fetch("https://mdbundles-server.onrender.com/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
       });
 
-      localStorage.setItem('users', JSON.stringify(users));
-      alert('Registration successful! Await admin approval before logging in.');
-      window.location.href = 'login.html';
+      const text = await res.text();
+      alert(text);
     }
   </script>
-
 </body>
 </html>
