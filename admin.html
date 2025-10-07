@@ -1,152 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Portal - Super High Services</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDBundles Admin Portal</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      margin: 0;
+      background: #101820;
+      color: #fff;
       padding: 20px;
     }
-    h1, h2 {
+    h2 {
       text-align: center;
+      color: #00d4ff;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
-      background: white;
+      margin-top: 20px;
     }
     th, td {
+      border: 1px solid #555;
       padding: 10px;
-      border: 1px solid #ccc;
       text-align: left;
     }
     th {
-      background: #2563eb;
-      color: white;
+      background: #00d4ff;
+      color: #000;
     }
-    .approve-btn, .remove-btn {
-      padding: 5px 10px;
+    button {
+      background: #00ffb3;
       border: none;
+      padding: 5px 10px;
       cursor: pointer;
       border-radius: 4px;
-      color: white;
     }
-    .approve-btn {
-      background: #16a34a;
-    }
-    .remove-btn {
-      background: #dc2626;
+    button:hover {
+      background: #00cc8a;
     }
   </style>
 </head>
 <body>
-  <h1>Super High Services Admin Portal</h1>
-  <p style="text-align:center;">(Page refreshes every 30 seconds)</p>
+  <h2>MDBundles Admin Portal</h2>
 
-  <h2>Registered Users</h2>
+  <h3>Pending User Approvals</h3>
   <table id="usersTable">
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
+    <tr><th>Email</th><th>Name</th><th>Action</th></tr>
   </table>
 
-  <h2>Orders</h2>
+  <h3>Recent Orders</h3>
   <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>User Email</th>
-        <th>Network</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
+    <tr><th>ID</th><th>Email</th><th>Network</th><th>Bundle</th><th>Status</th><th>Time</th></tr>
   </table>
 
   <script>
-    // ✅ Set your admin email here (only this email can access)
-    const adminEmail = "sethmartey360@gmail.com";
+    async function fetchData() {
+      const usersRes = await fetch("https://mdbundles-server.onrender.com/api/users");
+      const ordersRes = await fetch("https://mdbundles-server.onrender.com/api/orders");
+      const users = await usersRes.json();
+      const orders = await ordersRes.json();
 
-    // Check admin access
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (!loggedInUser || loggedInUser.email !== adminEmail) {
-      alert("Access denied! Admins only.");
-      window.location.href = "login.html";
-    }
-
-    // Load users and orders from localStorage
-    function loadAdminData() {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-      // Load users
-      const usersTable = document.querySelector("#usersTable tbody");
-      usersTable.innerHTML = "";
-      users.forEach((user, index) => {
+      const usersTable = document.getElementById("usersTable");
+      usersTable.innerHTML = "<tr><th>Email</th><th>Name</th><th>Action</th></tr>";
+      users.filter(u => !u.approved).forEach(u => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${user.email}</td>
-          <td>${user.name}</td>
-          <td>${user.approved ? "✅ Approved" : "❌ Pending"}</td>
-          <td>
-            <button class="approve-btn" onclick="approveUser(${index})">Approve</button>
-            <button class="remove-btn" onclick="removeUser(${index})">Remove</button>
-          </td>
-        `;
+        row.innerHTML = `<td>${u.email}</td><td>${u.name}</td>
+        <td><button onclick="approveUser('${u.email}')">Approve</button></td>`;
         usersTable.appendChild(row);
       });
 
-      // Load orders
-      const ordersTable = document.querySelector("#ordersTable tbody");
-      ordersTable.innerHTML = "";
-      orders.forEach(order => {
+      const ordersTable = document.getElementById("ordersTable");
+      ordersTable.innerHTML = "<tr><th>ID</th><th>Email</th><th>Network</th><th>Bundle</th><th>Status</th><th>Time</th></tr>";
+      orders.forEach(o => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${order.userEmail}</td>
-          <td>${order.network}</td>
-          <td>${order.amount}</td>
-          <td>${order.status}</td>
-          <td>${order.date}</td>
-        `;
+        row.innerHTML = `<td>${o.id}</td><td>${o.email}</td><td>${o.network}</td><td>${o.bundle}</td><td>${o.status}</td><td>${new Date(o.time).toLocaleString()}</td>`;
         ordersTable.appendChild(row);
       });
     }
 
-    function approveUser(index) {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      users[index].approved = true;
-      localStorage.setItem("users", JSON.stringify(users));
-      alert(`${users[index].email} has been approved.`);
-      loadAdminData();
+    async function approveUser(email) {
+      await fetch("https://mdbundles-server.onrender.com/admin/approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      alert("User approved!");
+      fetchData();
     }
 
-    function removeUser(index) {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const removedUser = users.splice(index, 1);
-      localStorage.setItem("users", JSON.stringify(users));
-      alert(`${removedUser[0].email} has been removed.`);
-      loadAdminData();
-    }
-
-    // Refresh every 30 seconds
-    setInterval(() => {
-      loadAdminData();
-    }, 30000);
-
-    // Initial load
-    loadAdminData();
+    fetchData();
+    setInterval(fetchData, 30000); // auto refresh every 30 seconds
   </script>
 </body>
 </html>
